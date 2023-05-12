@@ -1,7 +1,6 @@
 import re
 import datetime
 import json
-# from validaciones_logica import *
 
 def split_de_raza(diccionario:dict, key:str)->dict:
     '''

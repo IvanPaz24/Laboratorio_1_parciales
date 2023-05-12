@@ -245,6 +245,44 @@ def batalla_dbz(lista:list, key:str):
         else:
             print("Error")
 
+def agregar_poder_ataque(lista:list, key:str, valor:int):
+    if type(lista) == list and len(lista) > 0:
+        for elemento in lista:
+            aux = elemento[key] * valor
+            aux_total = elemento[key] + aux
+            # print(aux_total)
+        return aux_total
+
+def agregar_habilidades(lista:list, key:str):
+    lista_copia = lista.copy()
+    lista_final = []
+    if type(lista) == list and len(lista) > 0:
+        for personaje in lista_copia:
+            for raza in personaje[key]:
+                if "Saiyan" in raza:
+                    personaje_aux = {}
+                    personaje_aux["nombre"] = personaje['nombre']
+                    personaje_aux['poder_de_ataque'] = personaje['poder_de_ataque']
+                    personaje_aux["poder_de_pelea"] = personaje["poder_de_pelea"]
+                    personaje_aux["poder_de_ataque"] = agregar_poder_ataque
+                    personaje_aux['poder_de_ataque'] = agregar_poder_ataque(lista_copia, "poder_de_ataque", 0.70)
+                    personaje_aux['poder_de_pelea'] = agregar_poder_ataque(lista_copia, "poder_de_pelea", 0.50)
+                    personaje_aux["habilidades"] = personaje["habilidades"].copy()
+                    personaje_aux["habilidades"].append("transformación nivel dios")
+                    lista_final.append(personaje_aux)
+
+    with open("poderes_agregados.csv", "w") as archivo:
+        for dato in lista_final:
+            registro = "{0},{1},{2},{3}\n".format(dato["nombre"],dato["poder_de_pelea"],dato["poder_de_ataque"],
+                                                dato["habilidades"])
+            archivo.write(registro)
+
+# def crear_cvs(lista:list):
+#     with open("poderes_agregados.csv", "w") as archivo:
+#         for dato in lista:
+#             registro = "{0},{1},{2},{3}\n".format(dato["nombre"],dato["poder_de_pelea"],dato["poder_de_ataque"],
+#                                                 dato["habilidades"])
+#             archivo.write(registro)
 def mostrar_menu():
     '''
     Brief:muestra el menu principal con sus opciones
@@ -291,7 +329,7 @@ def dbz_app(path:str):
         respuesta = dbz_menu_principal()
 
         if respuesta != -1:
-            if respuesta < 1 or respuesta > 7:
+            if respuesta < 1 or respuesta > 9:
                 print("Error")
             else:
                 match respuesta:
@@ -335,4 +373,9 @@ def dbz_app(path:str):
                         else:
                             print("No se cargo el archivo")
                     case 8:
+                        if flag:
+                            agregar_habilidades(lista_normalizada, "raza")
+                        else:
+                            print("No se cargo el archivo")
+                    case 9:
                         break
