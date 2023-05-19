@@ -63,7 +63,7 @@ def mostrar_lista(lista:list, key = None):
                 print(f"{elemento}")
         else:
             for dato in lista:
-                    print(f"{key}: {dato[key]}")
+                    print(f"{dato[key]}")
 
 def mostrar_diccionario(diccionario:dict)->None:
     '''
@@ -245,50 +245,62 @@ def batalla_dbz(lista:list, key:str):
         else:
             print("Error")
 
-def agregar_poder_ataque(lista:list, key:str, valor:int):
-    if type(lista) == list and len(lista) > 0:
-        for elemento in lista:
-            aux = elemento[key] * valor
-            aux_total = elemento[key] + aux
-            # print(aux_total)
+def agregar_poder_ataque(diccionario, key:str, valor:int):
+    if type(key) == str and valor > 0:
+        aux = diccionario[key] * valor
+        aux_total = diccionario[key] + aux
         return aux_total
 
 def agregar_habilidades(lista:list, key:str):
+    '''
+    Brief: agrega un habiliadad a cierta, poder de pelear y poder de ataque a cierta raza
+    Parameters:
+        key:str -> clave del valor dentro de la lista
+        lista:list -> lista de personajes
+    '''
     lista_copia = lista.copy()
     lista_final = []
     if type(lista) == list and len(lista) > 0:
         for personaje in lista_copia:
-            for raza in personaje[key]:
-                if "Saiyan" in raza:
+            if validar_ingreso_datos("Saiyan", personaje[key]):
                     personaje_aux = {}
                     personaje_aux["nombre"] = personaje['nombre']
-                    personaje_aux['poder_de_ataque'] = personaje['poder_de_ataque']
-                    personaje_aux["poder_de_pelea"] = personaje["poder_de_pelea"]
-                    personaje_aux["poder_de_ataque"] = agregar_poder_ataque
-                    personaje_aux['poder_de_ataque'] = agregar_poder_ataque(lista_copia, "poder_de_ataque", 0.70)
-                    personaje_aux['poder_de_pelea'] = agregar_poder_ataque(lista_copia, "poder_de_pelea", 0.50)
+                    personaje_aux['poder_de_ataque'] = agregar_poder_ataque(personaje, "poder_de_ataque", 0.70)
+                    personaje_aux['poder_de_pelea'] = agregar_poder_ataque(personaje, "poder_de_pelea", 0.50)
                     personaje_aux["habilidades"] = personaje["habilidades"].copy()
                     personaje_aux["habilidades"].append("transformación nivel dios")
                     lista_final.append(personaje_aux)
 
-    with open("poderes_agregados.csv", "w") as archivo:
-        for dato in lista_final:
+    if crear_cvs(lista_final, "poderes_agregados.csv"):
+        print("Se cargo correctamente el archivo")
+    else:
+        print("Error")
+
+def crear_cvs(lista:list, path:str)->bool:
+    '''
+    Brief: crea un archivo cvs 
+    Parameters:
+        path:str -> nombre del archivo
+        lista:list -> lista de personajes
+    return: retorna True si se creo correctamente el archivo o False si hubo error
+    '''
+    flag = False
+    with open(path, "w", encoding="utf-8") as archivo:
+        for dato in lista:
             registro = "{0},{1},{2},{3}\n".format(dato["nombre"],dato["poder_de_pelea"],dato["poder_de_ataque"],
                                                 dato["habilidades"])
             archivo.write(registro)
+            flag = True
+    
+    return flag
 
-# def crear_cvs(lista:list):
-#     with open("poderes_agregados.csv", "w") as archivo:
-#         for dato in lista:
-#             registro = "{0},{1},{2},{3}\n".format(dato["nombre"],dato["poder_de_pelea"],dato["poder_de_ataque"],
-#                                                 dato["habilidades"])
-#             archivo.write(registro)
 def mostrar_menu():
     '''
     Brief:muestra el menu principal con sus opciones
     '''
-    menu = ["\n1.Traer datos desde archivo", "2.Listar cantidad por raza", "3.Listar personajes por raza", "4.Listar personajes por habilidad", 
-    "5.Jugar batalla", "6.Guardar Json", "7.Leer Json", "8.Salir"]
+    menu = ["\n1.Traer datos desde archivo", "2.Listar cantidad por raza", "3.Listar personajes por raza", 
+            "4.Listar personajes por habilidad", "5.Jugar batalla", "6.Guardar Json", "7.Leer Json", 
+            "8.Agregar habilidad y poder", "9.Salir"]
     for opcion in menu:
         print(opcion)
 

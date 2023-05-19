@@ -38,7 +38,7 @@ def parser_csv(path:str)->list:
     Parameters:
         diccionario:dict -> diccionario que se va a recorrer
         key:str -> clave del valor dentro del diccionario
-    return: retorna el diccionario normalizado 
+    return: retorna una lista del archivo leido
     '''
     if type(path) == str:
         flag = False
@@ -69,7 +69,7 @@ def crear_archivo_json(path:str, lista:list)->bool:
     Parameters:
         path:str -> nombre del archivo
         lista:list -> lista de personajes
-    return: retorna el diccionario normalizado 
+    return: retorna True si se creo correctamente el archivo o False si hubo error
     '''
     if type(path) == str and len(lista) > 0:
         with open(path, "w") as archivo:
@@ -109,7 +109,11 @@ def guardar_json(lista:list, key_raza:str, key_habilidad:str)->str:
     if type(lista) == list and type(key_raza) == str and type(key_habilidad) == str and len(lista) > 0:
         lista_copia = lista.copy()
         lista_final = []
+        raza_set = crear_set(lista, key_raza)
+        mostrar_lista(list(raza_set))
         raza_ingresada = ingreso_de_datos("Ingrese la raza: ", lista, key_raza)
+        habilidad_set = crear_set(lista, key_habilidad)
+        mostrar_lista(list(habilidad_set))
         habilidad_ingresada = ingreso_de_datos("Ingrese la habilidad: ", lista, key_habilidad)
         for personaje in lista_copia:
             if validar_ingreso_datos(raza_ingresada, personaje[key_raza]):
@@ -168,7 +172,9 @@ def crear_txt_batalla(path:str, ganador:dict, perdedor:dict, resultado:str, fech
         if len(ganador) > 0 and len(perdedor) > 0:
             with open(path, "a") as archivo:
                 if resultado != "Empate":
-                    registro = "Ganador: {0} | Perdedor:{1} | Rersultado: {2}\n".format(ganador["nombre"], perdedor["nombre"], resultado)
+                    registro = "Ganador: {0} | Perdedor:{1} | Rersultado: {2}\n".format(ganador["nombre"], 
+                                                                                        perdedor["nombre"], 
+                                                                                        resultado)
                 else:
                     registro = "{0} | {1} | Rersultado: {2}\n".format(ganador["nombre"], perdedor["nombre"], resultado)
                 fecha = (f"Fecha: {fecha}\n")
@@ -225,3 +231,34 @@ def ingreso_de_datos(mensaje:str, lista:list, key:str):
                 break
 
         return elemento
+
+
+def mostrar_lista(lista:list, key = None):
+    '''
+    Brief: puede mostrar la lista de elementos segun su key o simplemente mostrar su contenido
+    Parameters:
+        lista: list -> lista sobre la que voy a recorrer
+        key = None -> clave del valor dentro de la lista
+    '''
+    if type(lista) == list and len(lista) > 0:
+        if key == None:
+            for elemento in lista:
+                print(f"{elemento}")
+        else:
+            for dato in lista:
+                    print(f"{dato[key]}")
+
+def crear_set(lista:list, key:str)->set:
+    '''
+    Brief: crea un set de la lista dentro de lista de diccionarios  
+    Parameters:
+        lista: list -> lista sobre la que voy a hacer la busqueda
+        key:str -> clave del valor dentro de la lista
+    return: retorna el set
+    '''
+    if type(lista) == list and type(key) == str and len(lista) > 0:
+        mi_set = set()
+        for personaje in lista:
+            for i in range(len(personaje[key])):
+                mi_set.add(personaje[key][i])
+        return mi_set
