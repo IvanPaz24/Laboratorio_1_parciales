@@ -108,3 +108,5 @@ enemigo_quieto = [pygame.image.load("Mis recursos/enemigo/0.png"),
                 pygame.image.load("Mis recursos/enemigo/2.png"),] 
 
 enemigo_quieto_derecha = girar_imagenes(enemigo_quieto,True,False)
+
+item = pygame.image.load("Mis recursos/0.png")

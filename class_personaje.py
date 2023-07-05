@@ -11,8 +11,8 @@ class Personaje:
         self.alto_pantalla = tamaño_pantalla[1]
         #Gravedad
         self.gravedad = 1
-        self.poctencia_salto = -20
-        self.limite_velocidad_caida = 15
+        self.poctencia_salto = -22
+        self.limite_velocidad_caida = 30
         self.esta_saltando = False
         #ANIMACIONES
         self.contador_pasos = 0
@@ -28,6 +28,9 @@ class Personaje:
         #movimiento
         self.velocidad = velocidad
         self.desplazamiento_y = 0
+        #vida
+        self.vida = 3
+        self.score = 0
     #quieto - salta - camina_derecha - camina_izquierda
     def reescalar_animaciones(self):
         for clave in self.animaciones:
@@ -85,6 +88,7 @@ class Personaje:
                 if not self.esta_saltando:
                     self.animar(pantalla ,"golpe_izquierda")
 
+        self.platafoma_colision(lista_plataforma)
         self.aplicar_gravedad(pantalla, lista_plataforma)
 
     def aplicar_gravedad(self, pantalla, lista_plataforma:Plataforma):
@@ -102,15 +106,15 @@ class Personaje:
                 self.desplazamiento_y += self.gravedad
 
         for piso in lista_plataforma:
-            if self.lados["bottom"].colliderect(piso["top"]):
+            if self.lados["bottom"].colliderect(piso.lados["top"]):
                 self.esta_saltando = False
                 self.desplazamiento_y = 0
-                self.lados["main"].bottom = piso["main"].top + 5
+                self.lados["main"].bottom = piso.lados["main"].top + 5
                 break
             else:
                 self.esta_saltando = True
     
-    def muerto(self, proyectil, largo, pantalla):
+    def muerto(self, proyectil):
         flag = False
         if proyectil.rectangulo.colliderect(self.rectangulo):
             self.desaparecer_personaje()
@@ -125,4 +129,26 @@ class Personaje:
             
     def desaparecer_personaje(self):
         for lado in self.lados:
-            self.lados[lado].x = 0
+            self.lados[lado].x = self.rectangulo.x
+    
+    def bala_colision(self, largo, lista_balas):
+        for bala_enemigo in lista_balas:
+            if self.muerto(bala_enemigo):
+                lista_balas.pop(lista_balas.index(bala_enemigo))
+                self.score -= 100
+                self.vida -= 1
+
+            if bala_enemigo.rectangulo.x < largo and bala_enemigo.rectangulo.x > 0:
+                bala_enemigo.rectangulo.x += bala_enemigo.velocidad
+            else:
+                lista_balas.pop(lista_balas.index(bala_enemigo)) 
+
+    def platafoma_colision(self, lista_plataformas):
+        for plataforma in lista_plataformas:
+            if self.rectangulo.colliderect(plataforma.lados["left"]):
+                # self.rectangulo.right = plataforma.rectangulo.left
+                # if self.velocidad > 0:
+                for lado in self.lados:
+                    self.lados[lado].right = plataforma.lados["left"].height
+                # self.velocidad = 0
+

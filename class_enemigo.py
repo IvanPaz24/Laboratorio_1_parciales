@@ -14,6 +14,7 @@ class Enemigo(Personaje):
         self.rectangulo.x = posicion[0]
         self.rectangulo.y = posicion[1]
         self.lados = obtener_rectangulos(self.rectangulo)
+        self.direccion_enemigo = 0
 
     def reescalar_animaciones(self):
         for clave in self.animaciones:
@@ -36,3 +37,21 @@ class Enemigo(Personaje):
         lista_enemigo.remove(self)
         # if largo / 2 < largo:
         #     self.animar(pantalla, "quieto_enemigo_izquirda")
+
+    def bala_colision(self, largo,lista_balas, lista_enemigos, personaje):
+        for bala in lista_balas:
+            if self.muerto(bala, lista_enemigos):
+                lista_balas.pop(lista_balas.index(bala))
+                personaje.score += 100
+
+            if bala.rectangulo.x < largo and bala.rectangulo.x > 0:
+                bala.rectangulo.x += bala.velocidad
+            else:
+                lista_balas.pop(lista_balas.index(bala)) 
+
+    def donde_apunta(self, largo):
+        if self.rectangulo.x > largo/2:
+            self.direccion_enemigo = -1
+        elif self.rectangulo.x < largo:
+            self.direccion_enemigo = 1 
+        return self.direccion_enemigo 

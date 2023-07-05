@@ -16,4 +16,12 @@ class Plataforma:
     def crear_lados(self):
         self.lados = obtener_rectangulos(self.rectangulo)
 
+    # def colision_pared(self,personaje):
+    #     if personaje.rectangulo.colliderect(self.rectangulo):
+    #         if personaje.velocidad > 0:  # El personaje se mueve hacia la derecha
+    #             personaje.rectangulo.right = self.rectangulo.left  # Ajustar la posición a la izquierda de la plataforma
+    #         elif personaje.velocidad < 0:  # El personaje se mueve hacia la izquierda
+    #             personaje.rectangulo.left = self.rectangulo.right  # Ajustar la posición a la derecha de la plataforma
+    #         personaje.velocidad = 0 
+
 

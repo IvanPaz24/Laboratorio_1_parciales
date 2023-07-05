@@ -14,4 +14,3 @@ class Proyectil:
         # self.rectangulo = self.proyectil.get_rect()
         pantalla.blit(self.proyectil, self.rectangulo)
         
-    
