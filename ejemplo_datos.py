@@ -1,20 +1,20 @@
 import sqlite3
+from GUI_form_principal import *
 
-id = 3 
-sueldo = 100
+# id = 3 
+# sueldo = 100
 
 with sqlite3.connect("path") as conexion:
     try:
         #create table
-        # sentencia = '''
-        #             create table Empleados
-        #             (
-        #                 id integer primary key autoincrement,
-        #                 nombre text,
-        #                 apellido text,
-        #                 sueldo real
-        #             )
-        #             '''
+        sentencia = '''
+                    create table Jugador
+                    (
+                        nombre text,
+                        score real 
+                        
+                    )
+                    '''
         # sentencia = '''
         # alter table Empleados
         # add direccion text
@@ -40,7 +40,7 @@ with sqlite3.connect("path") as conexion:
         #     print(fila)
         # sentencia = 'update Empleados set sueldo = 500 where id = ?' 
         # cursor = conexion.execute(sentencia, (sueldo, id))#aunque sea uno solo tengo que poner coma
-        sentencia = 'delete Empleados where sueldo < 1000' #siempre usar el where sino borra todo
+        # sentencia = 'delete Empleados where sueldo < 1000' #siempre usar el where sino borra todo
         cursor = conexion.execute(sentencia)
 
         print("Dato insertado con exito")
